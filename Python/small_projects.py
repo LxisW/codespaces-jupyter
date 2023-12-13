@@ -32,5 +32,16 @@ def guess_my_number():
             print("Please enter a valid integer.")
 
 
+def fakultaet(n: int):
+    if n == 0:
+        print("Abbruchbedingung 0")
+        return 1
+    else:
+        print(f"{n}*fakultaet({n-1})")
+
+        return n*fakultaet(n-1)
+
+
 if __name__ == "__main__":
-    guess_my_number()
+    # guess_my_number()
+    print(fakultaet(5))
