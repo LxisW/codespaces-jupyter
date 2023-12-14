@@ -4,14 +4,52 @@ import pytz
 from datetime import datetime, timedelta
 from discord_webhook import DiscordEmbed, DiscordWebhook
 import schedule
+from colorama import init, Fore
+import re
+
 
 # timedelta for fixing timezones
 timedelta_add = 1
 
+# initalizes the colored text
+init()
+
+
+# available colors
+color_dict = {
+    "red": Fore.RED,
+    "green": Fore.GREEN,
+    "blue": Fore.BLUE,
+    "yellow": Fore.YELLOW,
+    "magenta": Fore.MAGENTA,
+    "cyan": Fore.CYAN,
+    "white": Fore.WHITE,
+    "orange": "\033[38;2;255;165;0m",  # RGB for orange
+    "reset": Fore.RESET
+}
+
+# colored output
+
+
+def output(text, color) -> None:
+
+    selected_color = color_dict.get(color.lower(), Fore.RESET)
+
+    # Print the colored text
+    print(
+        f"{selected_color}[{datetime.now().strftime('%H:%M:%S.%f')[:-3]}] {text}{Fore.RESET}")
+
+# colored input
+
+
+def colored_input(prompt, color):
+    selected_color = color_dict.get(color.lower(), Fore.RESET)
+    return input(f"{selected_color}{prompt}{Fore.RESET}")
+
 
 def get_schedule():
     # Sends the schedule of the current day via discord webhook
-    wehook_url = "YOUR WEBHOOK URL"
+    wehook_url = "https://discord.com/api/webhooks/1183777158695489577/av34T0DTKaxfXr41IEiMWgmgNH-xJOeiNVpY6YSTx0m1k_PG5TNVqzCTtFXxx2zpzXuU"
 
     headers = {
         'authority': 'api.stuv.app',
@@ -32,15 +70,12 @@ def get_schedule():
     response = s.get(
         'https://api.stuv.app/rapla/lectures/events/MOS-TINF23A',  headers=headers)
 
-    # print(response.text)
     data = response.json()["lectures"]
     schedule = {}
     for lecture in data:
         try:
-            # print(lecture)
             day = lecture["date"]
 
-            # print(day)
             day = datetime.strptime(
                 day, "%Y-%m-%dT%H:%M:%S.000Z") + timedelta(hours=timedelta_add)
 
@@ -51,7 +86,7 @@ def get_schedule():
                 lecture)
 
         except Exception as e:
-            print(e)
+            output(e, color="red")
 
     # if it should be the schedule for the net day add: + timedelta(days=1)
     day = datetime.now()
@@ -89,20 +124,39 @@ def get_schedule():
         webhook.add_embed(embed)
         webhook.execute()
     else:
-        print("Day not found...")
+        output(text="Day not found...", color="red")
+
+# checks the input
 
 
-start_time = input(
-    "Input your time when you want the webhook to be sent once a day (format: 18:20) or just input 'now' to send it instant!\n")
+def get_valid_time_input(prompt):
+    # checks the input with regex
+    time_pattern = re.compile(r"^(?:[01]\d|2[0-3]):[0-5]\d$|^now$")
+
+    while True:
+        user_input = colored_input(prompt=prompt, color="cyan")
+        if time_pattern.match(user_input.lower()):
+            return user_input
+        else:
+            output(
+                text="Invalid input. Please enter a time in HH:MM format or 'now'.", color="red")
+
+
+start_time = get_valid_time_input(
+    "Enter the time you want the daily webhook to be sent (in 24-hour format, e.g., 18:20), or type 'now' to send it immediately:\n"
+)
+
 if start_time == "now":
-    print("Sending the webhook...")
+    output(text="Sending the webhook...", color="orange")
     get_schedule()
-    print("Sent the webhook...")
+    output(text="Sent webhook...", color="green")
 
 else:
 
     schedule.every().day.at(start_time).do(get_schedule)
-    print(f"Sending schedule every day at {start_time}...")
+
+    output(
+        text=f"Sending schedule every day at {start_time}...", color="yellow")
     while True:
         schedule.run_pending()
         time.sleep(1)
