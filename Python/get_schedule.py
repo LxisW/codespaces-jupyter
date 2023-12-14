@@ -5,12 +5,13 @@ from datetime import datetime, timedelta
 from discord_webhook import DiscordEmbed, DiscordWebhook
 import schedule
 
+# timedelta for fixing timezones
 timedelta_add = 1
 
 
 def get_schedule():
     # Sends the schedule of the current day via discord webhook
-    wehook_url = "YOURWEBHOOKURL"
+    wehook_url = "YOUR WEBHOOK URL"
 
     headers = {
         'authority': 'api.stuv.app',
@@ -51,7 +52,8 @@ def get_schedule():
 
         except Exception as e:
             print(e)
-    # print(schedule)
+
+    # if it should be the schedule for the net day add: + timedelta(days=1)
     day = datetime.now()
     day = day.strftime('%d-%m-%Y')
     if day in schedule.keys():
@@ -90,10 +92,17 @@ def get_schedule():
         print("Day not found...")
 
 
-start_time = "13:08"
+start_time = input(
+    "Input your time when you want the webhook to be sent once a day (format: 18:20) or just input 'now' to send it instant!\n")
+if start_time == "now":
+    print("Sending the webhook...")
+    get_schedule()
+    print("Sent the webhook...")
 
-schedule.every().day.at(start_time).do(get_schedule)
-print(f"Sending schedule every day at {start_time}...")
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+else:
+
+    schedule.every().day.at(start_time).do(get_schedule)
+    print(f"Sending schedule every day at {start_time}...")
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
