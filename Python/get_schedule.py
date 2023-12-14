@@ -3,11 +3,12 @@ import time
 import pytz
 from datetime import datetime, timedelta
 from discord_webhook import DiscordEmbed, DiscordWebhook
+import schedule
 
 timedelta_add = 1
 
 
-def schedule():
+def get_schedule():
     # Sends the schedule of the current day via discord webhook
     wehook_url = "YOURWEBHOOKURL"
 
@@ -45,51 +46,54 @@ def schedule():
             # Format the datetime object to a string representing the date in 'day-month-year' format
             day_string = day.strftime('%d-%m-%Y')
 
-            # print(day_string)
             schedule.setdefault(day_string, []).append(
-                lecture)  # returns None!
+                lecture)
 
         except Exception as e:
             print(e)
     # print(schedule)
     day = datetime.now()
     day = day.strftime('%d-%m-%Y')
-    print(day)
-    data = schedule[day]
-
-    webhook = DiscordWebhook(url=wehook_url, username="TINF 23-A")
-    print(data)
-    embed = DiscordEmbed(title=f"Schedule {day}", color="38b6f1")
-    i = 1
-    for lesson in data:
-        try:
-            start_time = lesson["startTime"]
-            start_time = datetime.strptime(
-                start_time, "%Y-%m-%dT%H:%M:%S.000Z") + timedelta(hours=timedelta_add)
-            start_time = int(start_time.timestamp())
-            start_time = f"<t:{start_time}:R>"
-        except:
-            start_time = ""
-        try:
-            end_time = lesson["endTime"]
-            end_time = datetime.strptime(
-                end_time, "%Y-%m-%dT%H:%M:%S.000Z") + timedelta(hours=timedelta_add)
-            end_time = int(end_time.timestamp())
-            end_time = f"<t:{end_time}:R>"
-        except:
-            end_time = ""
-        rooms = "\n".join(lesson["rooms"])
-        name = lesson["name"]
-        type = lesson["type"]
-        dozent = lesson["lecturer"]
-        embed.add_embed_field(
-            name=f"{i}. {name}", value=f"**Start:** {start_time}\n**Ende:** {end_time}\n**Dozent:** {dozent}\n**Typ:** {type}\n**Raum:** \n{rooms}", inline=False)
-        i += 1
-    embed.set_footer(text="made by luis | TINF23A")
-    webhook.add_embed(embed)
-    webhook.execute()
-    input("Sent, waiting for interaction...")
-    pass
+    if day in schedule.keys():
+        data = schedule[day]
+        webhook = DiscordWebhook(url=wehook_url, username="TINF 23-A")
+        embed = DiscordEmbed(title=f"Schedule {day}", color="38b6f1")
+        i = 1
+        for lesson in data:
+            try:
+                start_time = lesson["startTime"]
+                start_time = datetime.strptime(
+                    start_time, "%Y-%m-%dT%H:%M:%S.000Z") + timedelta(hours=timedelta_add)
+                start_time = int(start_time.timestamp())
+                start_time = f"<t:{start_time}:R>"
+            except:
+                start_time = ""
+            try:
+                end_time = lesson["endTime"]
+                end_time = datetime.strptime(
+                    end_time, "%Y-%m-%dT%H:%M:%S.000Z") + timedelta(hours=timedelta_add)
+                end_time = int(end_time.timestamp())
+                end_time = f"<t:{end_time}:R>"
+            except:
+                end_time = ""
+            rooms = "\n".join(lesson["rooms"])
+            name = lesson["name"]
+            type = lesson["type"]
+            dozent = lesson["lecturer"]
+            embed.add_embed_field(
+                name=f"{i}. {name}", value=f"**Start:** {start_time}\n**Ende:** {end_time}\n**Dozent:** {dozent}\n**Typ:** {type}\n**Raum:** \n{rooms}", inline=False)
+            i += 1
+        embed.set_footer(text="made by luis | TINF23A")
+        webhook.add_embed(embed)
+        webhook.execute()
+    else:
+        print("Day not found...")
 
 
-schedule()
+start_time = "13:08"
+
+schedule.every().day.at(start_time).do(get_schedule)
+print(f"Sending schedule every day at {start_time}...")
+while True:
+    schedule.run_pending()
+    time.sleep(1)
