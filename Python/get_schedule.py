@@ -46,10 +46,11 @@ def colored_input(prompt, color):
     selected_color = color_dict.get(color.lower(), Fore.RESET)
     return input(f"{selected_color}{prompt}{Fore.RESET}")
 
+# main program: Sends the schedule of the current day via discord webhook
 
-def get_schedule():
-    # Sends the schedule of the current day via discord webhook
-    wehook_url = "https://discord.com/api/webhooks/1183777158695489577/av34T0DTKaxfXr41IEiMWgmgNH-xJOeiNVpY6YSTx0m1k_PG5TNVqzCTtFXxx2zpzXuU"
+
+def get_schedule(class_name):
+    wehook_url = "WEBHOOK URL"
 
     headers = {
         'authority': 'api.stuv.app',
@@ -67,8 +68,9 @@ def get_schedule():
         'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
     }
     s = requests.Session()
+    # TINF23A
     response = s.get(
-        'https://api.stuv.app/rapla/lectures/events/MOS-TINF23A',  headers=headers)
+        f'https://api.stuv.app/rapla/lectures/events/MOS-{class_name}',  headers=headers)
 
     data = response.json()["lectures"]
     schedule = {}
@@ -89,7 +91,7 @@ def get_schedule():
             output(e, color="red")
 
     # if it should be the schedule for the net day add: + timedelta(days=1)
-    day = datetime.now()
+    day = datetime.now() + timedelta(days=1)
     day = day.strftime('%d-%m-%Y')
     if day in schedule.keys():
         data = schedule[day]
@@ -145,15 +147,16 @@ def get_valid_time_input(prompt):
 start_time = get_valid_time_input(
     "Enter the time you want the daily webhook to be sent (in 24-hour format, e.g., 18:20), or type 'now' to send it immediately:\n"
 )
+class_name = input("Enter your class name: \n")
 
 if start_time == "now":
     output(text="Sending the webhook...", color="orange")
-    get_schedule()
+    get_schedule(class_name=class_name)
     output(text="Sent webhook...", color="green")
 
 else:
 
-    schedule.every().day.at(start_time).do(get_schedule)
+    schedule.every().day.at(start_time).do(get_schedule, class_name)
 
     output(
         text=f"Sending schedule every day at {start_time}...", color="yellow")
