@@ -6,25 +6,23 @@ from time import sleep
 
 
 def draw_console():
-
     max_range = 10
     print()
     # top
     for a in range(1, max_range):
-
         for j in range(a):
             print("x", end="")
-        for b in range(a, 2*max_range-a):
+        for b in range(a, 2 * max_range - a):
             print(".", end="")
         for c in range(a):
             print("o", end="")
         print()
 
     # bottom
-    for a in range(max_range, 1,  -1):
+    for a in range(max_range, 1, -1):
         for j in range(a):
             print("x", end="")
-        for b in range(a, 2*max_range-a):
+        for b in range(a, 2 * max_range - a):
             print(".", end="")
         for c in range(a):
             print("o", end="")
@@ -33,13 +31,13 @@ def draw_console():
 
 def draw_spiral(t: turtle.Turtle, screen: turtle.Screen):
     t.speed(0)
-    screen.bgcolor('black')
+    screen.bgcolor("black")
     t.width(5)
 
     for i in range(250):
-        color = colorsys.hsv_to_rgb(i/250, 1.0, 1.0)
+        color = colorsys.hsv_to_rgb(i / 250, 1.0, 1.0)
         t.pencolor(color)
-        t.forward(i*2)
+        t.forward(i * 2)
         t.left(59)
 
 
@@ -69,5 +67,5 @@ def exercise():
         print(base)
 
 
-# draw_turtle()
-exercise()
+draw_turtle()
+# exercise()

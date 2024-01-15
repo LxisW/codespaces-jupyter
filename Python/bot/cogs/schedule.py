@@ -14,40 +14,40 @@ class Schedule(commands.Cog):
 
     @staticmethod
     def get_embed(class_name) -> discord.Embed:
-
         timedelta_add = 1
         # if it should be the schedule for the net day add: + timedelta(days=1)
         day = datetime.now()  # + timedelta(days=1)
-        day = day.strftime('%d-%m-%Y')
+        day = day.strftime("%d-%m-%Y")
 
         headers = {
-            'authority': 'api.stuv.app',
-            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-            'accept-language': 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7',
-            'cache-control': 'max-age=0',
-            'sec-ch-ua': '"Google Chrome";v="119", "Chromium";v="119", "Not?A_Brand";v="24"',
-            'sec-ch-ua-mobile': '?0',
-            'sec-ch-ua-platform': '"macOS"',
-            'sec-fetch-dest': 'document',
-            'sec-fetch-mode': 'navigate',
-            'sec-fetch-site': 'none',
-            'sec-fetch-user': '?1',
-            'upgrade-insecure-requests': '1',
-            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+            "authority": "api.stuv.app",
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "accept-language": "de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7",
+            "cache-control": "max-age=0",
+            "sec-ch-ua": '"Google Chrome";v="119", "Chromium";v="119", "Not?A_Brand";v="24"',
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": '"macOS"',
+            "sec-fetch-dest": "document",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-site": "none",
+            "sec-fetch-user": "?1",
+            "upgrade-insecure-requests": "1",
+            "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
         }
         s = requests.Session()
 
         # TINF23A
         response = s.get(
-            f'https://api.stuv.app/rapla/lectures/events/MOS-{class_name}',  headers=headers)
+            f"https://api.stuv.app/rapla/lectures/events/{class_name}",
+            headers=headers,
+        )
         data = response.json()["lectures"]
         if len(data) == 0:
             # class not found
             Helper.colored_text(text="Class not found...", color="red")
-            embed = discord.Embed(title=f"Schedule {day}", color=0x38b6f1)
+            embed = discord.Embed(title=f"Schedule {day}", color=0x38B6F1)
             embed.add_field(name="Class Name", value=class_name, inline=False)
-            embed.add_field(
-                name="Info", value=f"Unknown class!")
+            embed.add_field(name="Info", value=f"Unknown class!")
             embed.set_footer(text="made by luis | TINF23A")
             return embed
         schedule = {}
@@ -55,28 +55,29 @@ class Schedule(commands.Cog):
             try:
                 date = lecture["date"]
 
-                date = datetime.strptime(
-                    date, "%Y-%m-%dT%H:%M:%S.000Z") + timedelta(hours=timedelta_add)
+                date = datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.000Z") + timedelta(
+                    hours=timedelta_add
+                )
 
                 # Format the datetime object to a string representing the date in 'day-month-year' format
-                day_string = date.strftime('%d-%m-%Y')
+                day_string = date.strftime("%d-%m-%Y")
 
-                schedule.setdefault(day_string, []).append(
-                    lecture)
+                schedule.setdefault(day_string, []).append(lecture)
 
             except Exception as e:
                 print("error:", e)
 
         if day in schedule.keys():
             data = schedule[day]
-            embed = discord.Embed(title=f"Schedule {day}", color=0x38b6f1)
+            embed = discord.Embed(title=f"Schedule {day}", color=0x38B6F1)
             embed.add_field(name="Class Name", value=class_name, inline=False)
             i = 1
             for lesson in data:
                 try:
                     start_time = lesson["startTime"]
                     start_time = datetime.strptime(
-                        start_time, "%Y-%m-%dT%H:%M:%S.000Z") + timedelta(hours=timedelta_add)
+                        start_time, "%Y-%m-%dT%H:%M:%S.000Z"
+                    ) + timedelta(hours=timedelta_add)
                     start_time = int(start_time.timestamp())
                     start_time = f"<t:{start_time}:R>"
                 except:
@@ -84,7 +85,8 @@ class Schedule(commands.Cog):
                 try:
                     end_time = lesson["endTime"]
                     end_time = datetime.strptime(
-                        end_time, "%Y-%m-%dT%H:%M:%S.000Z") + timedelta(hours=timedelta_add)
+                        end_time, "%Y-%m-%dT%H:%M:%S.000Z"
+                    ) + timedelta(hours=timedelta_add)
                     end_time = int(end_time.timestamp())
                     end_time = f"<t:{end_time}:R>"
                 except:
@@ -94,22 +96,28 @@ class Schedule(commands.Cog):
                 type = lesson["type"]
                 dozent = lesson["lecturer"]
                 embed.add_field(
-                    name=f"{i}. {name}", value=f"**Start:** {start_time}\n**Ende:** {end_time}\n**Dozent:** {dozent}\n**Typ:** {type}\n**Raum:** \n{rooms}", inline=False)
+                    name=f"{i}. {name}",
+                    value=f"**Start:** {start_time}\n**Ende:** {end_time}\n**Dozent:** {dozent}\n**Typ:** {type}\n**Raum:** \n{rooms}",
+                    inline=False,
+                )
                 i += 1
             embed.set_footer(text="made by luis | TINF23A")
 
         else:
             # day is weekend etc
             Helper.colored_text(text="Day not found...", color="red")
-            embed = discord.Embed(title=f"Schedule {day}", color=0x38b6f1)
+            embed = discord.Embed(title=f"Schedule {day}", color=0x38B6F1)
             embed.add_field(name="Class Name", value=class_name, inline=False)
             embed.add_field(
-                name="Info", value=f"No schedule found for the current day!")
+                name="Info", value=f"No schedule found for the current day!"
+            )
             embed.set_footer(text="made by luis | TINF23A")
 
         return embed
 
-    @app_commands.command(name="schedule", description="Returns the schedule of the current day")
+    @app_commands.command(
+        name="schedule", description="Returns the schedule of the current day"
+    )
     @app_commands.describe(class_name="Enter the class name")
     async def my_cmd_srvy(self, interaction: discord.Interaction, class_name: str):
         Helper.colored_text(text=__name__, color="white")

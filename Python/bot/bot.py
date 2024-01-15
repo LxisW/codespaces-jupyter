@@ -12,8 +12,7 @@ from utilities.helper import Helper
 
 # path to the token --> update path
 token_path = "/Users/luiswagner/Desktop/DHBW - AINF/GitHub/bot_token.txt"
-bot_token = open(
-    token_path).read()
+bot_token = open(token_path).read()
 app_id = "1187008525457686639"
 
 
@@ -29,10 +28,11 @@ class Bot(commands.Bot):
     async def on_ready(self) -> None:
         Helper.clear_console()
         Helper.colored_text(
-            color="green", text=f"Successfully started bot with name: {self.user.name}")
+            color="green", text=f"Successfully started bot with name: {self.user.name}"
+        )
 
     async def setup_hook(self) -> None:
-        cogs = ["cogs.schedule"]
+        cogs = ["cogs.schedule", "cogs.classes"]
         for cog in cogs:
             await self.load_extension(cog)
         await self.tree.sync()
