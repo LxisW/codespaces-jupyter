@@ -32,7 +32,7 @@ class Bot(commands.Bot):
         )
 
     async def setup_hook(self) -> None:
-        cogs = ["cogs.schedule", "cogs.classes"]
+        cogs = ["cogs.schedule", "cogs.classes", "cogs.joke"]
         for cog in cogs:
             await self.load_extension(cog)
         await self.tree.sync()
