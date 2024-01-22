@@ -7,8 +7,6 @@ from discord.ext import commands
 from utilities.helper import Helper
 from typing import Literal, Optional
 
-city_dict = {"Mosbach": "MOS", "Bad Mergentheim": "MGH"}
-
 
 class Joke(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -35,6 +33,7 @@ class Joke(commands.Cog):
         response = requests.get(
             "https://api.api-ninjas.com/v1/jokes?limit=1", headers=headers
         )
+        # print(response.text)
 
         joke = response.json()[0]["joke"]
         embed = discord.Embed(title=f"Joke", color=0x38B6F1, description=joke)
