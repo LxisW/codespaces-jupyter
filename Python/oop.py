@@ -8,11 +8,7 @@ class Person:
         print(f"Hello {self.name}")
 
     def get_data(self) -> dict:
-        data = {
-            "name": self.name,
-            "age": self.age,
-            "height": self.height
-        }
+        data = {"name": self.name, "age": self.age, "height": self.height}
         return data
 
 
