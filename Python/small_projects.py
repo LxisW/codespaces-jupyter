@@ -1,4 +1,5 @@
 import random
+from datetime import datetime
 
 
 def guess_my_number():
@@ -8,8 +9,7 @@ def guess_my_number():
     # Generate a random number (1-100)
     random_number = random.randint(lowest_number, highest_number)
 
-    print(
-        f"Guess the number! Between {lowest_number} and {highest_number}.")
+    print(f"Guess the number! Between {lowest_number} and {highest_number}.")
 
     attempts = 0
 
@@ -26,7 +26,8 @@ def guess_my_number():
                 print("Too high. Try again.")
             else:
                 print(
-                    f"Congratulations! You guessed the number in {attempts} attempts.")
+                    f"Congratulations! You guessed the number in {attempts} attempts."
+                )
                 break
         except ValueError:
             print("Please enter a valid integer.")
@@ -39,9 +40,27 @@ def fakultaet(n: int):
     else:
         print(f"{n}*fakultaet({n-1})")
 
-        return n*fakultaet(n-1)
+        return n * fakultaet(n - 1)
+
+
+def timestamp_to_date(timestamp):
+    """
+    Convert a Unix timestamp to a German date format (DD.MM.YYYY).
+
+    Args:
+    timestamp (int): Unix timestamp.
+
+    Returns:
+    str: Date in German format.
+    """
+    # above a docstring
+
+    date_time = datetime.utcfromtimestamp(timestamp)
+
+    return date_time.strftime("%d.%m.%Y")
 
 
 if __name__ == "__main__":
+    print(timestamp_to_date(1675000000))
     # guess_my_number()
-    print(fakultaet(5))
+    # print(fakultaet(5))

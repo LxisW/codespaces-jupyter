@@ -12,7 +12,7 @@ class Person:
         return data
 
 
-# "abstract" classes
+# kind of abstract classes
 class Animal:
     def __init__(self, name) -> None:
         self.name = name
