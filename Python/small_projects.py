@@ -1,5 +1,6 @@
 import random
 from datetime import datetime
+import numpy as np
 
 
 def guess_my_number():
@@ -60,7 +61,31 @@ def timestamp_to_date(timestamp):
     return date_time.strftime("%d.%m.%Y")
 
 
-if __name__ == "__main__":
-    print(timestamp_to_date(1675000000))
-    # guess_my_number()
-    # print(fakultaet(5))
+def merge_and_sort_arrays(arr1: list, arr2: list) -> list:
+    """
+    Merge two unsorted arrays and sort the resulting array.
+
+    Parameters:
+    arr1 (numpy.ndarray): The first array.
+    arr2 (numpy.ndarray): The second array.
+
+    Returns:
+    numpy.ndarray: A sorted array containing all elements from arr1 and arr2.
+    """
+    # Concatenate the two arrays
+    merged_array = np.concatenate((arr1, arr2))
+    # Sort the merged array
+    sorted_array = np.sort(merged_array)
+
+    return sorted_array
+
+
+# Example usage
+arr1 = [3, 1, 7]
+arr2 = [8, 5, 2]
+print("Merged and sorted array:", merge_and_sort_arrays(arr1, arr2))
+
+# if __name__ == "__main__":
+# print(timestamp_to_date(1675000000))
+# guess_my_number()
+# print(fakultaet(5))
