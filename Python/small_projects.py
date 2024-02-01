@@ -3,7 +3,7 @@ from datetime import datetime
 import numpy as np
 
 
-def guess_my_number():
+def guess_my_number() -> None:
     lowest_number = 1
     highest_number = 100
 
@@ -34,7 +34,7 @@ def guess_my_number():
             print("Please enter a valid integer.")
 
 
-def fakultaet(n: int):
+def fakultaet(n: int) -> int:
     if n == 0:
         print("Abbruchbedingung 0")
         return 1
@@ -44,7 +44,7 @@ def fakultaet(n: int):
         return n * fakultaet(n - 1)
 
 
-def timestamp_to_date(timestamp):
+def timestamp_to_date(timestamp) -> str:
     """
     Convert a Unix timestamp to a German date format (DD.MM.YYYY).
 
@@ -80,10 +80,10 @@ def merge_and_sort_arrays(arr1: list, arr2: list) -> list:
     return sorted_array
 
 
-# Example usage
-arr1 = [3, 1, 7]
-arr2 = [8, 5, 2]
-print("Merged and sorted array:", merge_and_sort_arrays(arr1, arr2))
+# # Example usage
+# arr1 = [3, 1, 7]
+# arr2 = [8, 5, 2]
+# print("Merged and sorted array:", merge_and_sort_arrays(arr1, arr2))
 
 # if __name__ == "__main__":
 # print(timestamp_to_date(1675000000))

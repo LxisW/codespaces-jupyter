@@ -38,6 +38,7 @@ class Bot(commands.Bot):
             "cogs.joke",
             "cogs.server-info",
             "cogs.important-links",
+            "cogs.send_message",
         ]
         for cog in cogs:
             await self.load_extension(cog)
