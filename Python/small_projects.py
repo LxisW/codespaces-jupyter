@@ -81,11 +81,43 @@ def merge_and_sort_arrays(arr1: list, arr2: list) -> list:
 
 
 # # Example usage
-# arr1 = [3, 1, 7]
-# arr2 = [8, 5, 2]
+arr1 = [3, 1, 7]
+arr2 = [8, 5, 2]
 # print("Merged and sorted array:", merge_and_sort_arrays(arr1, arr2))
 
-# if __name__ == "__main__":
+
 # print(timestamp_to_date(1675000000))
 # guess_my_number()
 # print(fakultaet(5))
+def categorize_students(student_grades) -> dict:
+    """
+    Categorizes students into lists based on their grades.
+
+    Parameters:
+    - student_grades: A list of tuples, where each tuple contains (student_name, grade).
+
+    Returns:
+    - A dictionary where each key is a grade ('A', 'B', 'C', 'D', 'F') and the value is a list of student names who achieved that grade.
+    """
+    # Initialize a dictionary to hold the categorized names
+    grade_categories = {1: [], 2: [], 3: [], 4: [], 5: [], 6: []}
+
+    # Iterate through each tuple in the list
+    for name, grade in student_grades:
+        # Check if the grade is one of the expected keys, then append the student's name to the correct list
+        if grade in grade_categories:
+            grade_categories[grade].append(name)
+
+    return grade_categories
+
+
+# Example usage:
+student_grades = [
+    ("Alice", 1),
+    ("Bob", 2),
+    ("Charlie", 3),
+    ("Diana", 1),
+    ("Evan", 5),
+]
+categorized_students = categorize_students(student_grades)
+print(categorized_students)
