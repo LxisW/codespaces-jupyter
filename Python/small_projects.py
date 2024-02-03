@@ -1,6 +1,7 @@
 import random
 from datetime import datetime
 import numpy as np
+from faker import Faker
 
 
 def guess_my_number() -> None:
@@ -104,20 +105,28 @@ def categorize_students(student_grades) -> dict:
 
     # Iterate through each tuple in the list
     for name, grade in student_grades:
-        # Check if the grade is one of the expected keys, then append the student's name to the correct list
         if grade in grade_categories:
             grade_categories[grade].append(name)
 
     return grade_categories
 
 
-# Example usage:
-student_grades = [
-    ("Alice", 1),
-    ("Bob", 2),
-    ("Charlie", 3),
-    ("Diana", 1),
-    ("Evan", 5),
-]
-categorized_students = categorize_students(student_grades)
+def create_random_students(num_students=5):
+    # Initialize Faker
+    fake = Faker()
+
+    student_grades = []
+
+    for _ in range(num_students):
+        name = fake.first_name()
+
+        grade = random.randint(1, 6)
+
+        student_grades.append((name, grade))
+
+    return student_grades
+
+
+students = create_random_students(25)
+categorized_students = categorize_students(students)
 print(categorized_students)
