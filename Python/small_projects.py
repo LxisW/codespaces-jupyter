@@ -127,6 +127,48 @@ def create_random_students(num_students=5):
     return student_grades
 
 
-students = create_random_students(25)
-categorized_students = categorize_students(students)
-print(categorized_students)
+def compare_categorized_students(group1, group2):
+    """
+    Compares two groups of categorized students based on numerical grades.
+
+    Parameters:
+    - group1, group2: Two dictionaries with numerical grades as keys and lists of student names as values.
+
+    Returns:
+    - A string indicating which group performed better and the percentage difference between their average grades.
+    """
+
+    # Calculate average grade for a group
+    def average_grade(group):
+        total_grades = 0
+        total_students = 0
+        for grade, students in group.items():
+            total_grades += grade * len(students)
+            total_students += len(students)
+        # Calculate the average if there are any students, otherwise return 0
+        return total_grades / total_students if total_students > 0 else 0
+
+    avg_grade_group1 = average_grade(group1)
+    avg_grade_group2 = average_grade(group2)
+
+    # Determine better group and calculate percentage difference
+    if avg_grade_group1 == avg_grade_group2:
+        return "Both groups performed equally well."
+    else:
+        better_group = "Group 1" if avg_grade_group1 < avg_grade_group2 else "Group 2"
+        difference = (
+            abs(avg_grade_group1 - avg_grade_group2)
+            / max(avg_grade_group1, avg_grade_group2)
+            * 100
+        )
+        return f"{better_group} performed better with an average grade difference of {difference:.2f}%."
+
+
+group1 = create_random_students(25)
+group2 = create_random_students(25)
+
+group1 = categorize_students(group1)
+group2 = categorize_students(group2)
+
+result = compare_categorized_students(group1, group2)
+print(result)
