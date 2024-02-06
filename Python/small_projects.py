@@ -164,8 +164,16 @@ def compare_categorized_students(group1, group2):
         return f"{better_group} performed better with an average grade difference of {difference:.2f}%."
 
 
-group1 = create_random_students(25)
-group2 = create_random_students(25)
+while True:
+    try:
+        student_count = input("Input the number of students you want to create?\n")
+        student_count = int(student_count)
+        break
+    except:
+        # error converting to int --> no int as input
+        print("Please enter a valid input!")
+group1 = create_random_students(student_count)
+group2 = create_random_students(student_count)
 
 group1 = categorize_students(group1)
 group2 = categorize_students(group2)
